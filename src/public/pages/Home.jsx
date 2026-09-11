@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   ChevronDown,
   Hammer,
+  HeartHandshake,
   Layers3,
   Phone,
   ShieldCheck,
