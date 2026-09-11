@@ -85,7 +85,7 @@ export default function Dashboard() {
               Tableau de bord
             </h1>
             <p className="text-sm text-neutral-500 mt-1">
-              Vue d'ensemble des visites du site MIRAAA.
+              Vue d'ensemble des visites pour le site.
             </p>
           </div>
 
