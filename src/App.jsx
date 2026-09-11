@@ -5,6 +5,7 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
+import { useEffect } from "react";
 
 // Public
 import Navbar from "./public/components/Navbar";
@@ -23,8 +24,16 @@ import Dashboard from "./admin/pages/Dashboard";
 import DynamicEditor from "./admin/pages/DynamicEditor";
 import StaticEditor from "./admin/pages/StaticEditor";
 import ReviewsManager from "./admin/pages/ReviewsManager";
-// 👇 1. Import your new Admin Demands page
 import ReviewsDemands from "./admin/pages/ReviewsDemands";
+
+// SEO component
+function SEO({ title }) {
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+
+  return null;
+}
 
 function Layout() {
   const location = useLocation();
@@ -46,32 +55,62 @@ function Layout() {
 
           <Route
             path="/"
-            element={<Home />}
+            element={
+              <>
+                <SEO title="Ravalement de façade & ITE à Ivry-sur-Seine | Amira Rénov" />
+                <Home />
+              </>
+            }
           />
 
           <Route
             path="/services"
-            element={<Services />}
+            element={
+              <>
+                <SEO title="Ravalement, ITE & rénovation de façade | Amira Rénov" />
+                <Services />
+              </>
+            }
           />
 
           <Route
             path="/realisations"
-            element={<Realisations />}
+            element={
+              <>
+                <SEO title="Réalisations de ravalement & ITE à Ivry-sur-Seine | Amira Rénov" />
+                <Realisations />
+              </>
+            }
           />
 
           <Route
             path="/informations"
-            element={<Informations />}
+            element={
+              <>
+                <SEO title="Entreprise de rénovation de façade à Ivry-sur-Seine | Amira Rénov" />
+                <Informations />
+              </>
+            }
           />
 
           <Route
             path="/contact"
-            element={<Contact />}
+            element={
+              <>
+                <SEO title="Contact – Ravalement & ITE à Ivry-sur-Seine | Amira Rénov" />
+                <Contact />
+              </>
+            }
           />
 
           <Route
             path="/reviews"
-            element={<Reviews />}
+            element={
+              <>
+                <SEO title="Avis clients – Amira Rénov à Ivry-sur-Seine" />
+                <Reviews />
+              </>
+            }
           />
 
 
@@ -124,7 +163,6 @@ function Layout() {
               element={<ReviewsManager />}
             />
 
-            {/* 👇 2. Add the route here: accessible at /admin/demandes-avis */}
             <Route
               path="demandes-avis"
               element={<ReviewsDemands />}
