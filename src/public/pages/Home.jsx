@@ -1653,9 +1653,9 @@ export default function Home() {
               text: "Un devis clair et détaillé",
             },
             {
-              icon: Star,
-              title: "Avis clients",
-              text: "Les avis de nos clients",
+              icon: HeartHandshake,
+              title: "À votre écoute",
+              text: "Un accompagnement attentif à chaque étape",
             },
           ].map((item, index) => {
             const Icon = item.icon;
