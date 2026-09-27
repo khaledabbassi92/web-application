@@ -29,7 +29,8 @@ import ReviewsDemands from "./admin/pages/ReviewsDemands";
 // SEO component
 function SEO({ title }) {
   useEffect(() => {
-    document.title = title;
+    // Sharp, edgy formatting: "PAGE | BRAND"
+    document.title = `${title} | Mira Rénov`;
   }, [title]);
 
   return null;
@@ -38,17 +39,17 @@ function SEO({ title }) {
 function Layout() {
   const location = useLocation();
 
+  // Determine admin context based on path
   const isAdmin = location.pathname
     .toLowerCase()
     .startsWith("/admin");
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-black">
+    <div className="flex flex-col min-h-screen bg-white text-black selection:bg-black selection:text-white">
       {!isAdmin && <Navbar />}
 
       <main className="flex-grow">
         <Routes>
-
           {/* =========================
               PUBLIC
           ========================= */}
@@ -57,7 +58,8 @@ function Layout() {
             path="/"
             element={
               <>
-                <SEO title="Ravalement de façade & ITE à Ivry-sur-Seine | Amira Rénov" />
+                {/* Professional, focused on location and core expertise */}
+                <SEO title="Expert Ravalement & Isolation Thermique à Ivry-sur-Seine" />
                 <Home />
               </>
             }
@@ -67,7 +69,8 @@ function Layout() {
             path="/services"
             element={
               <>
-                <SEO title="Ravalement, ITE & rénovation de façade | Amira Rénov" />
+                {/* Sharp, highlights high-end services */}
+                <SEO title="Rénovation de Façade & ITE | Solutions Haute Performance" />
                 <Services />
               </>
             }
@@ -77,7 +80,8 @@ function Layout() {
             path="/realisations"
             element={
               <>
-                <SEO title="Réalisations de ravalement & ITE à Ivry-sur-Seine | Amira Rénov" />
+                {/* Edgy, showcases the 'proof' of their work */}
+                <SEO title="Nos Chantiers Signés | Transformations et Preuves de Savoir-Faire" />
                 <Realisations />
               </>
             }
@@ -87,7 +91,8 @@ function Layout() {
             path="/informations"
             element={
               <>
-                <SEO title="Entreprise de rénovation de façade à Ivry-sur-Seine | Amira Rénov" />
+                {/* Authoritative stance */}
+                <SEO title="La Référence en Façade : Votre Expert à Ivry | Mira Rénov" />
                 <Informations />
               </>
             }
@@ -97,7 +102,8 @@ function Layout() {
             path="/contact"
             element={
               <>
-                <SEO title="Contact – Ravalement & ITE à Ivry-sur-Seine | Amira Rénov" />
+                {/* Direct and action-oriented */}
+                <SEO title="Demander un Devis | Contactez Nos Experts en Rénovation" />
                 <Contact />
               </>
             }
@@ -107,7 +113,8 @@ function Layout() {
             path="/reviews"
             element={
               <>
-                <SEO title="Avis clients – Amira Rénov à Ivry-sur-Seine" />
+                {/* Professional trust building */}
+                <SEO title="Avis Clients Vérifiés | La Confiance par la Qualité" />
                 <Reviews />
               </>
             }
