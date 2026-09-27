@@ -1,531 +1,418 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
-  Mail,
   Phone,
   ArrowUpRight,
-  MapPin,
-  ShieldCheck,
-<<<<<<< HEAD
-=======
-  ChevronRight,
->>>>>>> 552a0ac (Update web application)
+  Menu,
+  X,
 } from "lucide-react";
 
-export default function Footer() {
-  const [textData, setTextData] = useState({
-    phone: "",
-    email: "",
-    address: "",
-  });
+const API_URL = "";
+
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [phone, setPhone] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchTextData = async () => {
-      try {
-        const response = await fetch("/api/text");
+    let cancelled = false;
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch text data");
-        }
+    const loadCompanyInfo = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/text`, {
+          cache: "no-store",
+        });
+
+        if (!response.ok) return;
 
         const result = await response.json();
+        const data = result?.data || result;
 
-        if (result.success && result.data) {
-          setTextData({
-            phone: result.data.phone || "",
-            email: result.data.email || "",
-            address: result.data.address || "",
-          });
+        if (
+          !cancelled &&
+          typeof data?.phone === "string" &&
+          data.phone.trim()
+        ) {
+          setPhone(data.phone.trim());
         }
       } catch (error) {
-        console.error("Failed to fetch company information:", error);
+        console.error("Impossible de charger le téléphone:", error);
       }
     };
 
-    fetchTextData();
+    loadCompanyInfo();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-<<<<<<< HEAD
-  /* Prestations & Services with #id anchors */
-=======
->>>>>>> 552a0ac (Update web application)
-  const services = [
-    { label: "Ravalement de façade", href: "/services#ravalement-facade" },
-    { label: "Isolation thermique (ITE)", href: "/services#isolation-thermique" },
-    { label: "Enduits & finitions", href: "/services#enduits-finitions" },
-    { label: "Réparation & traitement", href: "/services#reparation-supports" },
-    { label: "Notre méthode & processus", href: "/services#methode" },
+  const phoneHref = phone
+    ? `tel:${phone.replace(/[^0-9+]/g, "")}`
+    : null;
+
+  const links = [
+    { label: "Accueil", href: "/" },
+    { label: "Services", href: "/services" },
+    { label: "Réalisations", href: "/realisations" },
+    { label: "À propos", href: "/informations" },
+    { label: "Avis clients", href: "/reviews" },
+    { label: "Contact", href: "/contact" },
   ];
 
-<<<<<<< HEAD
-  /* Informations sections with #id anchors */
-=======
->>>>>>> 552a0ac (Update web application)
-  const informations = [
-    { label: "À propos de notre équipe", href: "/informations#a-propos" },
-    { label: "Garanties & assurance décennale", href: "/informations#garanties" },
-    { label: "Informations réglementaires", href: "/informations#reglementaire" },
-    { label: "Demander un devis gratuit", href: "/contact" },
-  ];
+  const handleLinkClick = () => {
+    setIsOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleQuoteClick = (e) => {
+    e.preventDefault();
+    setIsOpen(false);
+    navigate("/contact");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
-<<<<<<< HEAD
-    <footer className="relative bg-white text-zinc-600 border-t border-zinc-200">
-      
-      {/* Top Accent Line */}
-      <div className="w-full h-[3px] bg-red-600" />
-
-      <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-12">
-
-        {/* TOP CTA STRIP */}
-        <div className="py-10 border-b border-zinc-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-red-50 flex items-center justify-center text-red-600">
-              <ShieldCheck size={20} />
-            </div>
-            <div>
-              <p className="text-sm font-bold text-zinc-900">Travaux sous Garantie Décennale</p>
-              <p className="text-xs text-zinc-400">Entreprise certifiée & conformité aux normes BTP</p>
-=======
-    <footer className="relative border-t border-zinc-200 bg-white text-zinc-600">
+    <header className="sticky top-0 z-50 w-full">
 
       {/* =========================================================
-          TOP ACCENT
+          DESKTOP / MAIN NAVBAR
       ========================================================= */}
-      <div className="h-[3px] w-full bg-red-700" />
+      <div className="hidden lg:block">
 
-      <div className="mx-auto max-w-[1580px] px-5 sm:px-8 lg:px-10 xl:px-12">
+        <div className="grid h-[104px] grid-cols-[280px_1fr_280px]">
 
-        {/* =========================================================
-            CTA / TRUST STRIP
-        ========================================================= */}
-        <div className="flex flex-col justify-between gap-7 border-b border-zinc-100 py-9 md:flex-row md:items-center lg:py-10">
+          {/* =====================================================
+              BRAND PANEL
+          ===================================================== */}
+          <Link
+            to="/"
+            onClick={handleLinkClick}
+            className="group relative flex items-center overflow-hidden bg-zinc-950 px-10"
+          >
+            {/* Architectural red block */}
+            <div className="absolute left-0 top-0 h-full w-[7px] bg-red-700" />
 
-          <div className="flex items-center gap-4">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-red-100 bg-red-50 text-red-700">
-              <ShieldCheck size={19} strokeWidth={1.9} />
+            {/* Background detail */}
+            <div className="absolute -right-8 -top-16 h-40 w-40 rounded-full border border-white/[0.06]" />
+            <div className="absolute -bottom-20 right-5 h-44 w-44 rounded-full border border-white/[0.04]" />
+
+            <div className="relative">
+
+              <div className="flex items-center">
+                <span className="text-[43px] font-black leading-none tracking-[-0.1em] text-white transition-colors duration-300 group-hover:text-red-500">
+                  MIRA
+                </span>
+
+                <span className="ml-3 h-[45px] w-[4px] bg-red-600 transition-all duration-300 group-hover:h-[52px]" />
+              </div>
+
+              <div className="mt-2.5 flex items-center">
+                <span className="mr-3 h-[2px] w-7 bg-red-600" />
+
+                <span className="text-[7px] font-bold uppercase tracking-[0.34em] text-zinc-500">
+                  RAVALEMENT & ITE
+                </span>
+              </div>
+
             </div>
+          </Link>
 
-            <div>
-              <p className="text-[12px] font-bold uppercase tracking-[0.05em] text-zinc-900">
-                Travaux sous garantie décennale
-              </p>
+          {/* =====================================================
+              CENTER NAVIGATION
+          ===================================================== */}
+          <div className="flex items-center justify-center bg-white px-6">
 
-              <p className="mt-1 text-[11px] text-zinc-400">
-                Un engagement professionnel pour vos travaux de rénovation
-              </p>
->>>>>>> 552a0ac (Update web application)
-            </div>
+            <nav className="flex items-center gap-1">
+
+              {links.map((link, index) => {
+                const isActive = location.pathname === link.href;
+
+                return (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    onClick={handleLinkClick}
+                    className={`group relative flex items-center gap-2 px-4 py-3 transition-all duration-200 ${
+                      isActive
+                        ? "bg-zinc-100"
+                        : "hover:bg-zinc-50"
+                    }`}
+                  >
+
+                    <span
+                      className={`text-[8px] font-bold tracking-[0.15em] ${
+                        isActive
+                          ? "text-red-700"
+                          : "text-zinc-300 group-hover:text-red-700"
+                      }`}
+                    >
+                      0{index + 1}
+                    </span>
+
+                    <span
+                      className={`text-[11px] font-bold uppercase tracking-[0.06em] transition-colors ${
+                        isActive
+                          ? "text-zinc-950"
+                          : "text-zinc-500 group-hover:text-zinc-950"
+                      }`}
+                    >
+                      {link.label}
+                    </span>
+
+                    {isActive && (
+                      <span className="absolute bottom-0 left-4 right-4 h-[2px] bg-red-700" />
+                    )}
+
+                  </Link>
+                );
+              })}
+
+            </nav>
           </div>
 
-          <a
-            href="/contact"
-<<<<<<< HEAD
-            className="inline-flex items-center gap-2.5 px-6 py-3 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold uppercase tracking-wider transition-all duration-200"
-          >
-            Obtenir un devis gratuit
-            <ArrowUpRight size={15} />
-          </a>
-        </div>
+          {/* =====================================================
+              CONTACT PANEL
+          ===================================================== */}
+          <div className="flex items-center bg-red-700 px-7">
 
-        {/* MAIN FOOTER CONTENT */}
-        <div className="py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-10">
-
-          {/* 1. BRAND BLOCK: AAA centered on top of MIRA with identical font size */}
-          <div className="lg:col-span-4 flex flex-col justify-between">
-            <div>
-              <a href="/" className="inline-block group">
-                <div className="inline-flex flex-col items-center select-none">
-                  {/* TOP: AAA (Same size, centered) */}
-                  <span className="text-[32px] font-black text-center text-red-600 tracking-tight leading-none">
-                    AAA
-                  </span>
-                  {/* BOTTOM: MIRA (Same size, centered) */}
-                  <span className="text-[32px] font-black text-center text-zinc-950 tracking-tight leading-none group-hover:text-red-600 transition-colors">
-                    MIRA
-                  </span>
+            {phone && phoneHref ? (
+              <a
+                href={phoneHref}
+                className="group flex min-w-0 flex-1 items-center gap-3"
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-white/25 bg-white/10">
+                  <Phone
+                    size={15}
+                    className="text-white"
+                    strokeWidth={2}
+                  />
                 </div>
 
-                <div className="flex items-center gap-2 mt-3">
-                  <span className="w-5 h-[2px] bg-red-600" />
-                  <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-zinc-400">
-                    Bâtiment & Rénovation
+                <div className="min-w-0">
+                  <span className="block text-[7px] font-bold uppercase tracking-[0.18em] text-red-200">
+                    Appelez-nous
+                  </span>
+
+                  <span className="mt-1 block truncate text-[12px] font-bold text-white">
+                    {phone}
                   </span>
                 </div>
               </a>
-
-              <p className="mt-6 text-sm leading-relaxed text-zinc-500 max-w-sm">
-                Spécialistes en ravalement de façades, isolation thermique extérieure (ITE), 
-                enduits décoratifs et rénovation générale du bâti.
-              </p>
-            </div>
-
-            {/* Address */}
-            {textData.address && (
-              <div className="mt-8 pt-6 border-t border-zinc-100 flex items-start gap-3">
-                <MapPin size={16} className="text-red-600 shrink-0 mt-1" />
-                <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block mb-0.5">
-                    Siège social
-                  </span>
-                  <p className="text-xs leading-relaxed text-zinc-600 whitespace-pre-line">
-=======
-            className="group inline-flex w-fit items-center gap-4 bg-red-700 px-6 py-3.5 text-white transition-all duration-300 hover:bg-red-800"
-          >
-            <span className="text-[10px] font-bold uppercase tracking-[0.12em]">
-              Obtenir un devis gratuit
-            </span>
-
-            <span className="flex h-6 w-6 items-center justify-center border border-white/25 bg-white/10">
-              <ArrowUpRight
-                size={14}
-                strokeWidth={2.3}
-                className="transition-transform duration-300 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]"
-              />
-            </span>
-          </a>
-        </div>
-
-        {/* =========================================================
-            MAIN FOOTER
-        ========================================================= */}
-        <div className="grid grid-cols-1 gap-12 py-14 md:grid-cols-2 lg:grid-cols-12 lg:gap-10 lg:py-16">
-
-          {/* =======================================================
-              BRAND
-          ======================================================= */}
-          <div className="lg:col-span-4">
-
-            <a
-              href="/"
-              className="group inline-block"
-            >
-              <div className="relative flex flex-col select-none">
-
-                {/* WORDMARK */}
-                <div className="flex items-center">
-                  <span className="text-[38px] font-black leading-none tracking-[-0.085em] text-zinc-950 transition-colors duration-300 group-hover:text-red-700 sm:text-[42px]">
-                    MIRA
-                  </span>
-
-                  <span className="ml-3 h-[39px] w-[4px] bg-red-700 transition-all duration-300 group-hover:h-[46px]" />
-                </div>
-
-                {/* FIELD */}
-                <div className="mt-2.5 flex items-center">
-                  <span className="mr-3 h-[2px] w-[33px] bg-red-700" />
-
-                  <span className="text-[8px] font-bold uppercase tracking-[0.32em] text-zinc-400">
-                    RAVALEMENT & ITE
-                  </span>
-                </div>
-
-                <span className="absolute -bottom-[10px] right-0 text-[6px] font-bold uppercase tracking-[0.28em] text-zinc-300">
-                  BÂTIMENT
+            ) : (
+              <div className="flex-1">
+                <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-red-200">
+                  MIRA
                 </span>
               </div>
-            </a>
-
-            <p className="mt-8 max-w-sm text-[13px] leading-[1.8] text-zinc-500">
-              Spécialistes en ravalement de façades, isolation thermique
-              extérieure (ITE), enduits décoratifs et rénovation générale
-              du bâti.
-            </p>
-
-            {/* ADDRESS */}
-            {textData.address && (
-              <div className="mt-8 flex items-start gap-3 border-t border-zinc-100 pt-6">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center bg-zinc-50 text-red-700">
-                  <MapPin size={14} strokeWidth={1.9} />
-                </div>
-
-                <div>
-                  <span className="block text-[8px] font-bold uppercase tracking-[0.17em] text-zinc-400">
-                    Siège social
-                  </span>
-
-                  <p className="mt-1.5 whitespace-pre-line text-[11px] leading-relaxed text-zinc-600">
->>>>>>> 552a0ac (Update web application)
-                    {textData.address}
-                  </p>
-                </div>
-              </div>
             )}
-          </div>
 
-<<<<<<< HEAD
-          {/* 2. SERVICES SECTION */}
-          <div className="lg:col-span-3">
-            <div className="flex items-center gap-2.5 mb-6">
-              <span className="w-2 h-2 rounded-full bg-red-600" />
-              <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-900">
-                Nos Prestations
-              </h3>
-            </div>
+            <Link
+              to="/contact"
+              onClick={handleQuoteClick}
+              className="group ml-4 flex h-10 w-10 shrink-0 items-center justify-center bg-white text-zinc-950 transition-all duration-300 hover:bg-zinc-950 hover:text-white"
+              aria-label="Demander un devis"
+            >
+              <ArrowUpRight
+                size={17}
+                strokeWidth={2.2}
+                className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
+            </Link>
 
-            <ul className="space-y-3">
-=======
-          {/* =======================================================
-              SERVICES
-          ======================================================= */}
-          <div className="lg:col-span-3">
-
-            <div className="mb-6 flex items-center gap-3">
-              <span className="h-[2px] w-6 bg-red-700" />
-
-              <h3 className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-900">
-                Nos prestations
-              </h3>
-            </div>
-
-            <ul className="space-y-3.5">
->>>>>>> 552a0ac (Update web application)
-              {services.map((service) => (
-                <li key={service.href}>
-                  <a
-                    href={service.href}
-<<<<<<< HEAD
-                    className="group inline-flex items-center text-sm text-zinc-500 hover:text-red-600 transition-colors"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-300 group-hover:bg-red-600 transition-colors mr-2.5 shrink-0" />
-                    <span>{service.label}</span>
-=======
-                    className="group flex items-center text-[12px] text-zinc-500 transition-colors duration-200 hover:text-red-700"
-                  >
-                    <span className="mr-3 h-[4px] w-[4px] shrink-0 bg-zinc-300 transition-colors duration-200 group-hover:bg-red-700" />
-
-                    <span>{service.label}</span>
-
-                    <ChevronRight
-                      size={12}
-                      className="ml-1 opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
-                    />
->>>>>>> 552a0ac (Update web application)
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-<<<<<<< HEAD
-          {/* 3. INFORMATIONS SECTION */}
-          <div className="lg:col-span-2">
-            <div className="flex items-center gap-2.5 mb-6">
-              <span className="w-2 h-2 rounded-full bg-red-600" />
-              <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-900">
-=======
-          {/* =======================================================
-              INFORMATION
-          ======================================================= */}
-          <div className="lg:col-span-2">
-
-            <div className="mb-6 flex items-center gap-3">
-              <span className="h-[2px] w-6 bg-red-700" />
-
-              <h3 className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-900">
->>>>>>> 552a0ac (Update web application)
-                Informations
-              </h3>
-            </div>
-
-<<<<<<< HEAD
-            <ul className="space-y-3">
-=======
-            <ul className="space-y-3.5">
->>>>>>> 552a0ac (Update web application)
-              {informations.map((item) => (
-                <li key={item.href}>
-                  <a
-                    href={item.href}
-<<<<<<< HEAD
-                    className="group inline-flex items-center text-sm text-zinc-500 hover:text-red-600 transition-colors"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-300 group-hover:bg-red-600 transition-colors mr-2.5 shrink-0" />
-                    <span>{item.label}</span>
-=======
-                    className="group flex items-center text-[12px] text-zinc-500 transition-colors duration-200 hover:text-red-700"
-                  >
-                    <span className="mr-3 h-[4px] w-[4px] shrink-0 bg-zinc-300 transition-colors duration-200 group-hover:bg-red-700" />
-
-                    <span>{item.label}</span>
-
-                    <ChevronRight
-                      size={12}
-                      className="ml-1 opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
-                    />
->>>>>>> 552a0ac (Update web application)
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-<<<<<<< HEAD
-          {/* 4. CONTACT & REACH US */}
-          <div className="lg:col-span-3">
-            <div className="flex items-center gap-2.5 mb-6">
-              <span className="w-2 h-2 rounded-full bg-red-600" />
-              <h3 className="text-xs font-bold uppercase tracking-[0.16em] text-zinc-900">
-                Contact Direct
-              </h3>
-            </div>
-
-            <div className="space-y-3">
-              {/* Phone Card */}
-              {textData.phone && (
-                <a
-                  href={`tel:${textData.phone.replace(/\s+/g, "")}`}
-                  className="group flex items-center gap-3.5 p-3.5 bg-zinc-50 hover:bg-red-50/50 border border-zinc-200/80 hover:border-red-600/30 transition-all"
-                >
-                  <div className="w-8 h-8 bg-white border border-zinc-200 flex items-center justify-center text-red-600 shrink-0 shadow-2xs">
-                    <Phone size={14} />
-                  </div>
-                  <div>
-                    <span className="block text-[9px] uppercase tracking-wider font-semibold text-zinc-400">
-                      Appelez-nous
-                    </span>
-                    <span className="block text-xs font-bold text-zinc-900 group-hover:text-red-600 transition-colors">
-=======
-          {/* =======================================================
-              CONTACT
-          ======================================================= */}
-          <div className="lg:col-span-3">
-
-            <div className="mb-6 flex items-center gap-3">
-              <span className="h-[2px] w-6 bg-red-700" />
-
-              <h3 className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-900">
-                Contact direct
-              </h3>
-            </div>
-
-            <div className="space-y-2.5">
-
-              {/* PHONE */}
-              {textData.phone && (
-                <a
-                  href={`tel:${textData.phone.replace(/[^0-9+]/g, "")}`}
-                  className="group flex items-center gap-3.5 border border-zinc-200 bg-zinc-50 p-3.5 transition-all duration-200 hover:border-red-200 hover:bg-red-50"
-                >
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center border border-zinc-200 bg-white text-red-700 transition-colors group-hover:border-red-200">
-                    <Phone size={14} strokeWidth={1.9} />
-                  </div>
-
-                  <div>
-                    <span className="block text-[8px] font-bold uppercase tracking-[0.17em] text-zinc-400">
-                      Téléphone
-                    </span>
-
-                    <span className="mt-1 block text-[12px] font-bold text-zinc-900 transition-colors group-hover:text-red-700">
->>>>>>> 552a0ac (Update web application)
-                      {textData.phone}
-                    </span>
-                  </div>
-                </a>
-              )}
-
-<<<<<<< HEAD
-              {/* Email Card */}
-              {textData.email && (
-                <a
-                  href={`mailto:${textData.email}`}
-                  className="group flex items-center gap-3.5 p-3.5 bg-zinc-50 hover:bg-red-50/50 border border-zinc-200/80 hover:border-red-600/30 transition-all"
-                >
-                  <div className="w-8 h-8 bg-white border border-zinc-200 flex items-center justify-center text-red-600 shrink-0 shadow-2xs">
-                    <Mail size={14} />
-                  </div>
-                  <div className="min-w-0">
-                    <span className="block text-[9px] uppercase tracking-wider font-semibold text-zinc-400">
-                      Email
-                    </span>
-                    <span className="block text-xs font-bold text-zinc-900 group-hover:text-red-600 transition-colors truncate">
-=======
-              {/* EMAIL */}
-              {textData.email && (
-                <a
-                  href={`mailto:${textData.email}`}
-                  className="group flex items-center gap-3.5 border border-zinc-200 bg-zinc-50 p-3.5 transition-all duration-200 hover:border-red-200 hover:bg-red-50"
-                >
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center border border-zinc-200 bg-white text-red-700 transition-colors group-hover:border-red-200">
-                    <Mail size={14} strokeWidth={1.9} />
-                  </div>
-
-                  <div className="min-w-0">
-                    <span className="block text-[8px] font-bold uppercase tracking-[0.17em] text-zinc-400">
-                      Email
-                    </span>
-
-                    <span className="mt-1 block truncate text-[12px] font-bold text-zinc-900 transition-colors group-hover:text-red-700">
->>>>>>> 552a0ac (Update web application)
-                      {textData.email}
-                    </span>
-                  </div>
-                </a>
-              )}
-<<<<<<< HEAD
-            </div>
-          </div>
-
-        </div>
-
-        {/* BOTTOM COPYRIGHT BAR */}
-        <div className="py-6 border-t border-zinc-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-zinc-400">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span>© 2026 AAA MIRA. Tous droits réservés.</span>
-            <span className="hidden sm:inline text-zinc-300">•</span>
-            <span>RCS Créteil 928 791 672</span>
-          </div>
-
-          <div className="flex items-center gap-6">
-            <a href="/mentions-legales" className="hover:text-red-600 transition-colors">
-              Mentions légales
-            </a>
-            <a href="/confidentialite" className="hover:text-red-600 transition-colors">
-=======
-
-            </div>
           </div>
         </div>
 
         {/* =========================================================
-            BOTTOM BAR
+            SECONDARY ARCHITECTURAL STRIP
         ========================================================= */}
-        <div className="flex flex-col gap-4 border-t border-zinc-100 py-6 text-[9px] text-zinc-400 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex h-[32px] items-center justify-between border-b border-zinc-200 bg-zinc-50 px-10">
 
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-            <span>
-              © 2026 MIRA. Tous droits réservés.
-            </span>
+          <div className="flex items-center gap-3">
+            <span className="h-[5px] w-[5px] bg-red-700" />
 
-            <span className="hidden text-zinc-300 sm:inline">
-              /
-            </span>
-
-            <span>
-              RCS Créteil 928 791 672
+            <span className="text-[7px] font-bold uppercase tracking-[0.22em] text-zinc-400">
+              Ravalement · Isolation · Rénovation
             </span>
           </div>
 
-          <div className="flex items-center gap-6">
-            <a
-              href="/mentions-legales"
-              className="transition-colors hover:text-red-700"
-            >
-              Mentions légales
-            </a>
+          <span className="text-[7px] font-bold uppercase tracking-[0.2em] text-zinc-300">
+            Bâtiment & rénovation
+          </span>
 
+        </div>
+      </div>
+
+      {/* =========================================================
+          MOBILE NAVBAR
+      ========================================================= */}
+      <div className="lg:hidden">
+
+        <div className="flex h-[76px] items-stretch bg-zinc-950">
+
+          {/* MOBILE BRAND */}
+          <Link
+            to="/"
+            onClick={handleLinkClick}
+            className="relative flex flex-1 items-center px-5"
+          >
+            <div className="absolute left-0 top-0 h-full w-[5px] bg-red-700" />
+
+            <div>
+              <div className="flex items-center">
+                <span className="text-[31px] font-black leading-none tracking-[-0.09em] text-white">
+                  MIRA
+                </span>
+
+                <span className="ml-2 h-[33px] w-[3px] bg-red-600" />
+              </div>
+
+              <div className="mt-1.5 flex items-center">
+                <span className="mr-2 h-[2px] w-5 bg-red-600" />
+
+                <span className="text-[6px] font-bold uppercase tracking-[0.28em] text-zinc-500">
+                  RAVALEMENT & ITE
+                </span>
+              </div>
+            </div>
+          </Link>
+
+          {/* MOBILE PHONE */}
+          {phone && phoneHref && (
             <a
-              href="/confidentialite"
-              className="transition-colors hover:text-red-700"
+              href={phoneHref}
+              className="flex w-[52px] items-center justify-center border-l border-white/10 bg-zinc-900 text-white"
+              aria-label={`Appeler au ${phone}`}
             >
->>>>>>> 552a0ac (Update web application)
-              Confidentialité
+              <Phone size={17} strokeWidth={1.9} />
             </a>
-          </div>
+          )}
+
+          {/* MOBILE MENU */}
+          <button
+            type="button"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label={
+              isOpen
+                ? "Fermer le menu"
+                : "Ouvrir le menu"
+            }
+            aria-expanded={isOpen}
+            className="flex w-[58px] items-center justify-center bg-red-700 text-white transition-colors hover:bg-red-800"
+          >
+            {isOpen ? (
+              <X size={20} strokeWidth={1.9} />
+            ) : (
+              <Menu size={20} strokeWidth={1.9} />
+            )}
+          </button>
+
         </div>
 
+        {/* =======================================================
+            MOBILE DRAWER
+        ======================================================= */}
+        <div
+          className={`overflow-hidden transition-all duration-300 ${
+            isOpen
+              ? "max-h-[700px] opacity-100"
+              : "pointer-events-none max-h-0 opacity-0"
+          }`}
+        >
+          <div className="bg-zinc-950">
+
+            <div className="border-t border-white/10">
+
+              {links.map((link, index) => {
+                const isActive =
+                  location.pathname === link.href;
+
+                return (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    onClick={handleLinkClick}
+                    className={`group flex items-center justify-between border-b border-white/[0.07] px-6 py-[17px] ${
+                      isActive
+                        ? "bg-white/[0.06]"
+                        : ""
+                    }`}
+                  >
+
+                    <div className="flex items-center gap-4">
+
+                      <span
+                        className={`text-[8px] font-bold tracking-[0.2em] ${
+                          isActive
+                            ? "text-red-500"
+                            : "text-zinc-600"
+                        }`}
+                      >
+                        0{index + 1}
+                      </span>
+
+                      <span
+                        className={`text-[12px] font-bold uppercase tracking-[0.08em] ${
+                          isActive
+                            ? "text-white"
+                            : "text-zinc-400 group-hover:text-white"
+                        }`}
+                      >
+                        {link.label}
+                      </span>
+
+                    </div>
+
+                    <ArrowUpRight
+                      size={14}
+                      className={`${
+                        isActive
+                          ? "text-red-500"
+                          : "text-zinc-700 group-hover:text-red-500"
+                      }`}
+                    />
+
+                  </Link>
+                );
+              })}
+
+            </div>
+
+            {/* MOBILE CTA */}
+            <div className="p-5">
+
+              <Link
+                to="/contact"
+                onClick={handleQuoteClick}
+                className="group flex h-[52px] items-center justify-between bg-red-700 px-5 text-white transition-colors hover:bg-red-800"
+              >
+                <span className="text-[9px] font-bold uppercase tracking-[0.15em]">
+                  Demander un devis gratuit
+                </span>
+
+                <ArrowUpRight
+                  size={16}
+                  className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                />
+              </Link>
+
+              <div className="mt-5 flex items-center justify-between">
+                <span className="text-[7px] font-bold uppercase tracking-[0.2em] text-zinc-600">
+                  MIRA · BÂTIMENT
+                </span>
+
+                <span className="text-[7px] font-bold uppercase tracking-[0.2em] text-zinc-600">
+                  01 — 06
+                </span>
+              </div>
+
+            </div>
+          </div>
+        </div>
       </div>
-    </footer>
+    </header>
   );
 }
